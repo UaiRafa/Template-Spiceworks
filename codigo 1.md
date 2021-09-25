@@ -5,7 +5,7 @@ html>
 <tbody>
 	<tr>
         <td colspan="2" style="border:0px;padding: 9px; color: #fff; background: #009EE7;"><h1 style="margin-bottom:0px;">IT Helpdesk - Ticket &#35;{{ticket.id}}</h1>
-            <h2 style="margin-bottom:0px;">{% case event %}{% when 'ticket-opened' %}Ticket Opened{% when 'ticket-reopened' %}Ticket Reopened{% when 'ticket-assigned' %}Ticket Assigned ({{ticket.assignee.full_name | escape}}) {% when 'ticket-comment' %}Ticket Updated{% when 'ticket-closed' %}Ticket Closed{% endcase %} - {{ticket.summary | escape}}</h2>
+            <h2 style="margin-bottom:0px;">{% case event %}{% when 'Chamado aberto' %}Chamado aberto{% when 'Chamado Reaberto' %}Chamado Reaberto{% when 'Chamado designado' %}Chamado designado ({{ticket.assignee.full_name | escape}}) {% when 'Comentário do chamado' %}Chamado atualizado{% when 'Chamado Fechado' %}Chamado Fechado{% endcase %} - {{ticket.summary | escape}}</h2>
         </td>
 	</tr>
 	
@@ -15,17 +15,17 @@ html>
 <!-- ************************************************************************** -->	
 {% case event %}
 <!-- ************************************************************************** -->	
-	{% when 'ticket-opened' %}
+	{% when 'Chamado aberto' %}
 		{% case recipient.role %}
 			{% when 'end_user' or 'reporting' %}
-				<p>A new ticket has been received by the Chamberlain IT HelpDesk.  Please check your email for ticket updates, someone will contact you shortly.</p>
-				<p>If you have any additional information regarding this ticket; respond to this email. Please remember to keep <strong>{{ticket.ref}}</strong> in the email subject.</p>
+				<p>O Chamado foi recebido pela equipe de TI. Por favor, atente-se as atualizações via E-mail, algum de nós dará o retorno.</p>
+				<p>Se você tiver alguma informação adicional sobre este chamado; responda este E-mail. Por favor mantenha <strong>{{ticket.ref}}</strong> no assunto do E-mail.</p>
 			{% when 'admin' or 'helpdesk_admin' %}
-				<p>A new ticket has been added to our Help Desk system.</p>
-				<p>If you have any additional information regarding this ticket respond to this email. Please remember to keep <strong>{{ticket.ref}}</strong> in the email subject.</p>
+				<p>Um novo chamado foi adicionado pela equipe de TI.</p>
+				<p>Se você tiver alguma informação adicional sobre este chamado; responda este E-mail. Por favor mantenha <strong>{{ticket.ref}}</strong> no assunto do E-mail.</p>
 		{% endcase %}
 <!-- ************************************************************************** -->	
-	{% when 'ticket-assigned' %}
+	{% when 'Chamado designado' %}
 		{% case recipient.role %}
 			{% when 'end_user' or 'reporting' %}
 			{% if ticket.assignee.full_name_or_email == null %}
@@ -48,46 +48,46 @@ html>
   {% endif %}
 {% endif %}</p> 
 			{% endif %}
-				{% if events contains 'ticket-comment' %}<p style="font-style: italic;">With the comment:</p>
+				{% if events contains 'Comentário do chamado' %}<p style="font-style: italic;">Com o comentário:</p>
 		<p>{{ticket.last_comment.body | escape | simple_format | replace:'<br /><br />','<br />'}}</p>
 {% endif %}
 			{% when 'admin' or 'helpdesk_admin' %}
-				<p style="font-style: italic;">Ticket &#35;{{ticket.id}} created on {{ticket.created_at | date_sw}} has been assigned to <strong>{{ticket.assignee.full_name_or_email}}</strong>.</p>
-								{% if events contains 'ticket-comment' %}<p style="font-style: italic;">With the comment:</p>
+				<p style="font-style: italic;">Ticket &#35;{{ticket.id}} created on {{ticket.created_at | date_sw}} Foi Designado a: <strong>{{ticket.assignee.full_name_or_email}}</strong>.</p>
+								{% if events contains 'Comentário do chamado' %}<p style="font-style: italic;">Com o comentário:</p>
 		<p>{{ticket.last_comment.body | escape | simple_format | replace:'<br /><br />','<br />'}}</p>
 			{% endif %}
 		{% endcase %}
 <!-- ************************************************************************** -->	
-	{% when 'ticket-comment' %}
+	{% when 'Comentário do chamado' %}
 		<p style="font-style: italic;">On {{ticket.last_comment.created_at | date_sw }}, <strong>{{ticket.last_comment.creator.full_name_or_email}}</strong> wrote:</p>
 		<p>{{ticket.last_comment.body | escape | simple_format | replace:'<br /><br />','<br />'}}</p>
 <!-- ************************************************************************** -->	
-	{% when 'ticket-closed' %}
+	{% when 'Chamado Fechado' %}
 		{% case recipient.role %}
 			{% when 'end_user' or 'reporting' %}
-				<p style="font-style: italic;">On {{ticket.closed_at | date_sw}},</p><p style="font-style: italic;">Ticket &#35;{{ticket.id}} was closed.</p>
-				{% if events contains 'ticket-comment' %}<p style="font-style: italic;">With the comment:</p>
+				<p style="font-style: italic;">On {{ticket.closed_at | date_sw}},</p><p style="font-style: italic;">chamado &#35;{{ticket.id}} Foi Fechado.</p>
+				{% if events contains 'Comentário do chamado' %}<p style="font-style: italic;">Com o comentário:</p>
 		<p>{{ticket.last_comment.body | escape | simple_format | replace:'<br /><br />','<br />'}}</p>
 			{% endif %}
-			<p style="font-style: italic;">Please do not reply to this email unless this ticket has not been closed to your satisfaction. If you would like to thank <strong>{{ticket.assignee.full_name_or_email}}</strong>, use the email link to the right.</p><p> We need your help! <strong> Please help us in improving our level of service by completing the following anonymous survey.</strong>(https://www.surveymonkey.com/r/5RXGWPF)
+			<p style="font-style: italic;">Por favor, só responda este E-mail se o chamado não foi fechado com sua satisfação. Caso queira agradecer <strong>{{ticket.assignee.full_name_or_email}}</strong>, Use o link deste email.</p><p> We need your help! <strong> Please help us in improving our level of service by completing the following anonymous survey.</strong>(https://www.surveymonkey.com/r/5RXGWPF)
 			{% when 'admin' or 'helpdesk_admin' %}
 				<p style="font-style: italic;">Ticket &#35;{{ticket.id}} was closed on {{ticket.closed_at | date_sw}}.</p>
-								{% if events contains 'ticket-comment' %}<p style="font-style: italic;">With the comment:</p>
+								{% if events contains 'Comentário do chamado' %}<p style="font-style: italic;">Com o comentário:</p>
 		<p>{{ticket.last_comment.body | escape | simple_format | replace:'<br /><br />','<br />'}}</p>
 			{% endif %}
 		{% endcase %}
 <!-- ************************************************************************** -->	
-	{% when 'ticket-reopened' %}
+	{% when 'Chamado Reaberto' %}
 		{% case recipient.role %}
 			{% when 'end_user' or 'reporting' %}
-				<p style="font-style: italic;">Ticket &#35;{{ticket.id}} has been reopened.</p>
-{% if events contains 'ticket-comment' %}<p style="font-style: italic;">With the comment:</p>
+				<p style="font-style: italic;">Chamado &#35;{{ticket.id}} Foi reaberto.</p>
+{% if events contains 'Comentário do chamado' %}<p style="font-style: italic;">Com o comentário:</p>
 		<p>{{ticket.last_comment.body | escape | simple_format | replace:'<br /><br />','<br />'}}</p>
 			{% endif %}
 			 <p style="font-style: italic;">If the reason is not listed above, please click on the Ticket URL in the box to the right and update the ticket with the reason.  You may also close the ticket from there if you have re-opened it in error.</p>
 				{% when 'admin' or 'helpdesk_admin' %}
-				<p style="font-style: italic;">Ticket &#35;{{ticket.id}} has been reopened.</p>
-				{% if events contains 'ticket-comment' %}<p style="font-style: italic;">With the comment:</p>
+				<p style="font-style: italic;">Chamado &#35;{{ticket.id}} Foi reaberto.</p>
+				{% if events contains 'Comentário do chamado' %}<p style="font-style: italic;">Com o comentário:</p>
 		<p>{{ticket.last_comment.body | escape | truncatewords: 100 | simple_format | replace:'<br /><br />','<br />'}}</p>
 			{% endif %}
 		{% endcase %}
@@ -98,11 +98,11 @@ html>
 <tr style="padding: 10px;">
 <td colspan=2 style="vertical-align: top;"><div style="margin:15px 8px 15px;padding: 9px; border: 2px #009EE7 solid; font-size: 12px;"><strong>TICKET &#35;: </strong><font style="color:#009EE7;">{{ticket.id}}</font>
 	<hr style="height: 1px; color: #ccc;" />
-	<strong>Created Date: </strong><font style="color:#009EE7;">{{ticket.created_at | date_sw}}</font><br /><br />
-    <strong>Due Date: </strong><font style="color:#009EE7;">{{ticket.due_at | date_sw}}</font><br /><br />
-  	<strong>Creator: </strong><a style="color:#009EE7; text-decoration: none;" href="mailto:{{ticket.creator.email}}">{{ticket.creator.full_name_or_email}}</a><br /><br />
-	<strong>Summary: </strong><font style="color:#009EE7;">{{ticket.summary}}</font><br /><br />
-  <strong>Priority: </strong><font style="color:#009EE7;">{{ticket.priority}}</font><br /><br />
+	<strong>Data de criação: </strong><font style="color:#009EE7;">{{ticket.created_at | date_sw}}</font><br /><br />
+    <strong>Data de vencimento: </strong><font style="color:#009EE7;">{{ticket.due_at | date_sw}}</font><br /><br />
+  	<strong>Solicitante: </strong><a style="color:#009EE7; text-decoration: none;" href="mailto:{{ticket.creator.email}}">{{ticket.creator.full_name_or_email}}</a><br /><br />
+	<strong>Resumo: </strong><font style="color:#009EE7;">{{ticket.summary}}</font><br /><br />
+  <strong>Prioridade: </strong><font style="color:#009EE7;">{{ticket.priority}}</font><br /><br />
 	<strong>Ticket URL: </strong><a style="color:#009EE7; text-decoration: none;" href="
 		{% if recipient.role == 'admin' or recipient.role == 'helpdesk_admin' %}
 			{{ticket.url}}
@@ -132,32 +132,32 @@ html>
 		{% else %}
 			{{ticket.portal_url}}
 		{% endif %}
-	" >here</a> to post a comment and view other tickets.</p>
+	" >here</a> para adicionar um comentário e ver outros chamados.</p>
 	</div>
 	</td>
 	</tr>
 <!-- ************************************************************************** -->	
 {% case event %}
 <!-- ************************************************************************** -->	
-	{% when 'ticket-opened' %}
-        <!-- If you have specific items that you want to display in certain circumstances, -->
-        <!-- prior to the ticket summary.  I wanted a summary on each email that went out -->
+	{% when 'Chamado aberto' %}
+        <!-- Se você tiver itens específicos que deseja exibir em certas circunstâncias, -->
+        <!-- antes do resumo do Chamado. Eu gostaria de um resumo de cada e-mail enviado -->
 
 
 <!-- ************************************************************************** -->	
-	{% when 'ticket-assigned' %}
+	{% when 'Responsável pelo chamado' %}
 
 
 <!-- ************************************************************************** -->	
-	{% when 'ticket-comment' %}
+	{% when 'Comentários do chamado' %}
 	
 	
 <!-- ************************************************************************** -->	
-	{% when 'ticket-closed' %}
+	{% when 'Chamado fechado' %}
 
 
 <!-- ************************************************************************** -->	
-	{% when 'ticket-reopened' %}
+	{% when 'Chamado Reaberto' %}
 
 
 <!-- ************************************************************************** -->	
